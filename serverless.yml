@@ -27,8 +27,6 @@ provider:
   region: ap-southeast-1
 
 # you can overwrite defaults here
-
-
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
 #    - Effect: "Allow"
@@ -127,3 +125,12 @@ functions:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+plugins:
+  - serverless-domain-manager
+
+custom:
+  customDomain:
+    domainName: bus.reubentjl.com
+    basePath: 'api'
+    stage: dev
+    createRoute53Record: true
