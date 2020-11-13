@@ -129,8 +129,12 @@ plugins:
   - serverless-domain-manager
 
 custom:
+  # base:
+  #   dev: 'dev/api'
+  #   prod: 'api'
   customDomain:
     domainName: bus.reubentjl.com
     basePath: 'api'
-    stage: dev
+    stage: ${opt:stage}
     createRoute53Record: true
+    # basePath: ${self:custom.base.${opt:stage}}
