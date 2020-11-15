@@ -1,33 +1,40 @@
-# master only
-
 name: Integrate
 
 on:
   push:
     branches:
       - master
+      - staging
+      - dev
 
 jobs:
-  deploy:
-    name: deploy
+  deploy-dev:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x]
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    - uses: actions/checkout@v1
+    - name: Extract STAGE
+      run: echo "STAGE=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
+    - name: Rename STAGE to prod if master branch
+      if: env.STAGE == 'master'
+      shell: bash
+      run: echo "STAGE=prod" >> $GITHUB_ENV
+    - name: Debug
+      run: echo ${{ env.STAGE }}
+    - uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - name: serverless deploy
-      uses: serverless/github-action@master
-      with:
-        args: deploy
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        # or if using AWS credentials directly
-        # SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
-        
+        node-version: '10.x'
+    - name: Install Serverless Framework
+      run: npm install -g serverless
+    - name: Install NPM dependencies
+      run: npm install
+    - name: Serverless AWS authentication
+      run: sls config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }} --stage ${{ env.STAGE }}
+    - name: Create env file
+      run: | # cp sample.env.yml env.yml
+        cat > env.yml << EOF
+        ${{ secrets.ENV }}
+        EOF
+    - name: Deploy create domain
+      run: sls create_domain --stage ${{ env.STAGE }}
+    - name: Deploy Lambda functions
+      run: sls deploy --stage ${{ env.STAGE }}
