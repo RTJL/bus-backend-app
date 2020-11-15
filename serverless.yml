@@ -130,6 +130,7 @@ plugins:
 custom:
   domain:
     dev: dev.sgbus.tk
+    staging: staging.sgbus.tk
     prod: www.sgbus.tk
   customDomain:
     domainName: ${self:custom.domain.${opt:stage}}
