@@ -61,7 +61,7 @@ functions:
     memorySize: 128
     events:
       - schedule: 
-          name: fetch-latest-LTA-data
+          name: fetch-latest-LTA-data-${self:provider.stage}
           description: fetch and update cache
           rate: rate(1 minute)
           enabled: true
