@@ -17,6 +17,7 @@ var/
 *.egg
 
 # NPM Junk
+package-lock.json
 node_modules/
 
 # Serverless directories
