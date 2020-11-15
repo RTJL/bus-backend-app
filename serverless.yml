@@ -25,6 +25,8 @@ provider:
   runtime: python3.8
   stage: dev
   region: ap-southeast-1
+  apiGateway:
+    shouldStartNameWithService: true
 
 # you can overwrite defaults here
 # you can add statements to the Lambda function's IAM Role here
@@ -129,11 +131,11 @@ plugins:
   - serverless-domain-manager
 
 custom:
-  # base:
-  #   dev: 'dev/api'
-  #   prod: 'api'
+  domain:
+    dev: dev.sgbus.tk
+    prod: www.sgbus.tk
   customDomain:
-    domainName: bus.reubentjl.com
+    domainName: ${self:custom.domain.${opt:stage}}
     basePath: 'api'
     stage: ${opt:stage}
     createRoute53Record: true
