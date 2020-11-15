@@ -18,6 +18,8 @@ jobs:
       if: env.STAGE == 'master'
       shell: bash
       run: echo "STAGE=prod" >> $GITHUB_ENV
+    - name: Debug
+      run: echo ${{ env.STAGE }}
     - uses: actions/setup-node@v1
       with:
         node-version: '10.x'
@@ -33,6 +35,6 @@ jobs:
         ${{ secrets.ENV }}
         EOF
     - name: Deploy create domain
-      run: sls create_domain -s ${{ env.STAGE }}
+      run: sls create_domain --stage ${{ env.STAGE }}
     - name: Deploy Lambda functions
-      run: sls deploy -s ${{ env.STAGE }}
+      run: sls deploy --stage ${{ env.STAGE }}
