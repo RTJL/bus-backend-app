@@ -1,20 +1,5 @@
-# Welcome to Serverless!
-#
-# This file is the main config file for your service.
-# It's very minimal at this point and uses default values.
-# You can always add more config options for more control.
-# We've included some commented out config examples here.
-# Just uncomment any of them to get that config option.
-#
-# For full config options, check the docs:
-#    docs.serverless.com
-#
-# Happy Coding!
-
 service: bus-backend-app
 
-# You can pin your service to only deploy with a specific Serverless version
-# Check out our docs for more details
 frameworkVersion: '2'
 
 provider:
@@ -22,8 +7,59 @@ provider:
   runtime: python3.8
   stage: ${opt:stage}
   region: ap-southeast-1
+  vpc:
+    subnetIds: ${self:custom.subnetPrivateId.${opt:stage}}
+    securityGroupIds: ${self:custom.securityGroupId.${opt:stage}}
   apiGateway:
     shouldStartNameWithService: true
+
+functions:
+  update_cache:
+    handler: update_cache.hello
+    memorySize: 128
+    events:
+      - schedule: 
+          name: fetch-latest-LTA-data-${self:provider.stage}
+          description: fetch and update cache
+          rate: rate(1 minute)
+          enabled: true
+  get_bus:
+    handler: bus.get
+    memorySize: 128
+    events:
+      - http:
+          path: bus
+          method: get
+
+plugins:
+  - serverless-domain-manager
+
+custom:
+  domain:
+    dev: dev.sgbus.tk
+    staging: staging.sgbus.tk
+    prod: www.sgbus.tk
+  vpcId:
+    dev: ${ssm:/bus-backend-infra/dev/vpc/id}
+    staging: ${ssm:/bus-backend-infra/staging/vpc/id}
+    prod: ${ssm:/bus-backend-infra/prod/vpc/id}
+  subnetPublicId:
+    dev: ${ssm:/bus-backend-infra/dev/subnet/public/id~split}
+    staging: ${ssm:/bus-backend-infra/staging/subnet/public/id~split}
+    prod: ${ssm:/bus-backend-infra/prod/subnet/public/id~split}
+  subnetPrivateId:
+    dev: ${ssm:/bus-backend-infra/dev/subnet/private/id~split}
+    staging: ${ssm:/bus-backend-infra/staging/subnet/private/id~split}
+    prod: ${ssm:/bus-backend-infra/prod/subnet/private/id~split}
+  securityGroupId:
+    dev: ${ssm:/bus-backend-infra/dev/securityGroup/id}
+    staging: ${ssm:/bus-backend-infra/staging/securityGroup/id}
+    prod: ${ssm:/bus-backend-infra/prod/securityGroup/id}
+  customDomain:
+    domainName: ${self:custom.domain.${opt:stage}}
+    basePath: 'api'
+    stage: ${opt:stage}
+    createRoute53Record: true
 
 # you can overwrite defaults here
 # you can add statements to the Lambda function's IAM Role here
@@ -54,24 +90,6 @@ provider:
 #  exclude:
 #    - exclude-me.py
 #    - exclude-me-dir/**
-
-functions:
-  update_cache:
-    handler: update_cache.hello
-    memorySize: 128
-    events:
-      - schedule: 
-          name: fetch-latest-LTA-data-${self:provider.stage}
-          description: fetch and update cache
-          rate: rate(1 minute)
-          enabled: true
-  get_bus:
-    handler: bus.get
-    memorySize: 128
-    events:
-      - http:
-          path: bus
-          method: get
   
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -124,17 +142,3 @@ functions:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
-plugins:
-  - serverless-domain-manager
-
-custom:
-  domain:
-    dev: dev.sgbus.tk
-    staging: staging.sgbus.tk
-    prod: www.sgbus.tk
-  customDomain:
-    domainName: ${self:custom.domain.${opt:stage}}
-    basePath: 'api'
-    stage: ${opt:stage}
-    createRoute53Record: true
-    # basePath: ${self:custom.base.${opt:stage}}
