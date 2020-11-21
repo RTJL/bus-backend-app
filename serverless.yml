@@ -7,22 +7,22 @@ provider:
   runtime: python3.8
   stage: ${opt:stage}
   region: ap-southeast-1
-  vpc:
-    subnetIds: ${self:custom.subnetPrivateId.${opt:stage}}
-    securityGroupIds: ${self:custom.securityGroupId.${opt:stage}}
+  # vpc:
+  #   subnetIds: ${self:custom.subnetPrivateId.${opt:stage}}
+  #   securityGroupIds: ${self:custom.securityGroupId.${opt:stage}}
   apiGateway:
     shouldStartNameWithService: true
 
 functions:
-  update_cache:
-    handler: update_cache.hello
-    memorySize: 128
-    events:
-      - schedule: 
-          name: fetch-latest-LTA-data-${self:provider.stage}
-          description: fetch and update cache
-          rate: rate(1 minute)
-          enabled: true
+  # update_cache:
+  #   handler: update_cache.hello
+  #   memorySize: 128
+  #   events:
+  #     - schedule: 
+  #         name: fetch-latest-LTA-data-${self:provider.stage}
+  #         description: fetch and update cache
+  #         rate: rate(1 minute)
+  #         enabled: true
   get_buses:
     handler: buses.get
     memorySize: 128
