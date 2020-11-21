@@ -23,17 +23,37 @@ functions:
           description: fetch and update cache
           rate: rate(1 minute)
           enabled: true
-  get_bus:
-    handler: bus.get
+  get_buses:
+    handler: buses.get
     memorySize: 128
     events:
       - http:
-          path: bus
+          path: buses
           method: get
+  get_busstops:
+    handler: busstops.get
+    memorySize: 128
+    events:
+      - http:
+          path: bus-stops
+          method: get
+  get_arrival:
+    handler: arrival.get
+    memorySize: 128
+    events:
+      - http:
+          path: arrival/{id}
+          method: get
+          request:
+            parameters:
+              paths:
+                id: true
 
 plugins:
   - serverless-domain-manager
-
+  - serverless-offline-scheduler
+  - serverless-offline
+  - serverless-python-requirements
 custom:
   domain:
     dev: dev.sgbus.tk

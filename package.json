@@ -18,6 +18,10 @@
   },
   "homepage": "https://github.com/RTJL/bus-backend-app#readme",
   "devDependencies": {
-    "serverless-domain-manager": "^5.1.0"
-  }
+    "serverless-domain-manager": "^5.1.0",
+    "serverless-offline": "^6.8.0",
+    "serverless-offline-scheduler": "^0.4.2",
+    "serverless-python-requirements": "^5.1.0"
+  },
+  "dependencies": {}
 }

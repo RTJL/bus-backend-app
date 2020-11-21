@@ -1,10 +1,16 @@
 import json
+import os
+from retrieve_keys import get_lta_key
+from landtransportsg import PublicTransport
 
+lta_key = get_lta_key()
+client = PublicTransport(lta_key)
 
 def get(event, context):
+    busstop_list = client.bus_stops()
+
     body = {
-        "message": "/bus (GET)",
-        "input": event
+        "busStops": busstop_list
     }
 
     response = {

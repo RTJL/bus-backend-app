@@ -1,6 +1,33 @@
 # Serverless Framework + AWS Backend
 Basic steps needed to get API gateway with a custom domain name and serverless functions working using the serverless framework.
 
+## Getting started
+- Setup local dev env
+- Run local dev server
+
+### Setup local dev env
+
+1. Create and activate python virtual environment
+
+    `python3 -m venv .venv`
+
+    `source .venv/bin/activate`
+
+2. Install python requirements
+
+    `pip install -r requirements.txt`
+
+3. Install serverless plugins
+
+    `npm install`
+
+### Run local dev server
+
+1. Start local dev server using serverless
+    
+    `sls offline start --stage local --runSchedulesOnInit`
+
+
 ## Outline of Steps
 1. Link domain to AWS Route 53
 2. Create domain using Serverless framework
