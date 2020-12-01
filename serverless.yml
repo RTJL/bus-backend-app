@@ -39,21 +39,21 @@ functions:
     memorySize: 128
     events:
       - http:
-          path: buses
+          path: api/buses
           method: get
   get_busstops:
     handler: busstops.get
     memorySize: 128
     events:
       - http:
-          path: bus-stops
+          path: api/bus-stops
           method: get
   get_arrival:
     handler: arrival.get
     memorySize: 128
     events:
       - http:
-          path: arrival/{id}
+          path: api/arrival/{id}
           method: get
           request:
             parameters:
@@ -61,7 +61,7 @@ functions:
                 id: true
 
 plugins:
-  - serverless-domain-manager
+  # - serverless-domain-manager
   - serverless-offline-scheduler
   - serverless-offline
   - serverless-python-requirements
@@ -86,11 +86,11 @@ custom:
     dev: ${ssm:/bus-backend-infra/dev/securityGroup/id}
     staging: ${ssm:/bus-backend-infra/staging/securityGroup/id}
     prod: ${ssm:/bus-backend-infra/prod/securityGroup/id}
-  customDomain:
-    domainName: ${self:custom.domain.${opt:stage}}
-    basePath: 'api'
-    stage: ${opt:stage}
-    createRoute53Record: true
+  # customDomain:
+  #   domainName: ${self:custom.domain.${opt:stage}}
+  #   basePath: 'api'
+  #   stage: ${opt:stage}
+  #   createRoute53Record: false
 
 # you can overwrite defaults here
 # you can add statements to the Lambda function's IAM Role here
