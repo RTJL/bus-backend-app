@@ -94,7 +94,6 @@ Example response:
       "Latitude": 1.29684825487647,
       "Longitude": 103.85253591654006
     },
-    ...,
     {
       "BusStopCode": "01013",
       "RoadName": "Victoria St",
@@ -110,6 +109,7 @@ Example response:
 Returns an array of bus services and its estimated arrival time for a bus stop.
 
 Method: GET
+
 URL Param: Bus stop code, 5 digit number
 
 Example response:
