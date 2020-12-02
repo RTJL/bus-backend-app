@@ -7,7 +7,7 @@ Backend serverless application that fetches the respective bus arrival informati
 
 ### Setup local dev env
 
-1. Create and activate python virtual environment
+1. Create python virtual environment
 
     `python3 -m venv .venv`
 
@@ -22,14 +22,16 @@ Backend serverless application that fetches the respective bus arrival informati
 4. Grant direnv permissions and re-enter the directory 
 
     `direnv allow`
+
     `cd ..`
+
     `cd bus-backend-app`
 
 ### Run local dev server
 
 Start local dev server using serverless
     
-    `sls offline start --stage local --runSchedulesOnInit`
+`sls offline start --stage local --runSchedulesOnInit`
 
 ## Endpoints
 - /api/buses
