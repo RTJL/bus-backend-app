@@ -1,49 +1,165 @@
-# Serverless Framework + AWS Backend
-Basic steps needed to get API gateway with a custom domain name and serverless functions working using the serverless framework.
+# Bus Arrival Backend App
+Backend serverless application that fetches the respective bus arrival information. Built using Serverless Framework and deployed on AWS Lambda + API Gateway.
 
-## Outline of Steps
-1. Link domain to AWS Route 53
-2. Create domain using Serverless framework
-3. Create AWS resources using Serverless framework
+## Getting started
+- Setup local dev env
+- Run local dev server
 
----
+### Setup local dev env
 
-### Link domain to AWS Route 53
+1. Create python virtual environment
 
-1. Register a domain
+    `python3 -m venv .venv`
 
-    [freenom](https://freenom.com/) provides free `.tk` domains.
+2. Create your own `.envrc` config file
 
-1. Get a AWS certificate for your domain registar
-    1. Go to Certificate Manager
-    2. Request a public certificate
-    3. Enter your domain name
-    4. Choose email or DNS confirmation
-    - If email, click approve upon receiving email
-    - If DNS, go to domain registar and update the CNAME
+    `cp .envrc.template .envrc`
 
-2. Transfer DNS control from domain registar to AWS
-    1. Go to Route53
-    2. Create a new hosted zone
-    3. Enter domain name
-    4. Go back to domain registar and update nameserver(NS) values
+3. Replace the API key(REPLACE_WITH_YOUR_KEY) with your own
 
-### Create domain using Serverless framework
+    `export LTA_ACCOUNT_KEY=REPLACE_WITH_YOUR_KEY`
 
-1. Install **serverless-domain-manager** plugin
+4. Grant direnv permissions and re-enter the directory 
 
-    `npm install serverless-domain-manager`
+    `direnv allow`
 
-2. Add the plugin configuration to `serverless.yml` config file
+    `cd ..`
 
-3. Create domain using the serverless command 
+    `cd bus-backend-app`
 
-    `sls create_domain --stage dev`
+### Run local dev server
 
-### Create AWS resources using Serverless framework
+Start local dev server using serverless
+    
+`sls offline start --stage local --runSchedulesOnInit`
 
-1. Add the provider and functions to `serverless.yml` config file
+## Endpoints
+- /api/buses
+- /api/bus-stops
+- /api/arrival/{bus-stop-code}
 
-2. Create AWS resources using the serverless command
+### /api/buses
 
-    `sls deploy --stage dev`
+Returns an array of bus services
+
+Method: GET
+
+Example response
+```json
+{
+  "buses": [
+    {
+      "ServiceNo": "118",
+      "Operator": "GAS",
+      "Direction": 1,
+      "Category": "TRUNK",
+      "OriginCode": "65009",
+      "DestinationCode": "97009",
+      "AM_Peak_Freq": "5-08",
+      "AM_Offpeak_Freq": "8-12",
+      "PM_Peak_Freq": "8-10",
+      "PM_Offpeak_Freq": "09-14",
+      "LoopDesc": ""
+    },
+    ...,
+    {
+      "ServiceNo": "118",
+      "Operator": "GAS",
+      "Direction": 2,
+      "Category": "TRUNK",
+      "OriginCode": "97009",
+      "DestinationCode": "65009",
+      "AM_Peak_Freq": "10-10",
+      "AM_Offpeak_Freq": "8-11",
+      "PM_Peak_Freq": "4-08",
+      "PM_Offpeak_Freq": "9-12",
+      "LoopDesc": ""
+    }
+  ]
+}
+```
+
+### /api/buses
+
+Returns an array of bus stops.
+
+Method: GET
+
+Example response:
+```json
+{
+  "busStops": [
+    {
+      "BusStopCode": "01012",
+      "RoadName": "Victoria St",
+      "Description": "Hotel Grand Pacific",
+      "Latitude": 1.29684825487647,
+      "Longitude": 103.85253591654006
+    },
+    {
+      "BusStopCode": "01013",
+      "RoadName": "Victoria St",
+      "Description": "St. Joseph's Ch",
+      "Latitude": 1.29770970610083,
+      "Longitude": 103.8532247463225
+    }
+  ]
+}
+```
+### /api/arrival/{bus-stop-code}
+
+Returns an array of bus services and its estimated arrival time for a bus stop.
+
+Method: GET
+
+URL Param: Bus stop code, 5 digit number
+
+Example response:
+```json
+{
+  "services": [
+    {
+      "ServiceNo": "117",
+      "Operator": "SBST",
+      "NextBus": {
+        "OriginCode": "65009",
+        "DestinationCode": "58009",
+        "EstimatedArrival": "2020-12-02T12:54:12+08:00",
+        "Latitude": "1.4100626666666667",
+        "Longitude": "103.8299775",
+        "VisitNumber": "1",
+        "Load": "SEA",
+        "Feature": "WAB",
+        "Type": "DD"
+      },
+      "NextBus2": {
+        ...
+      },
+      "NextBus3": {
+        ...
+      }
+    },
+    {
+      "ServiceNo": "39",
+      "Operator": "SBST",
+      "NextBus": {
+        ...
+      },
+      "NextBus2": {
+        ...
+      },
+      "NextBus3": {
+        "OriginCode": "",
+        "DestinationCode": "",
+        "EstimatedArrival": "",
+        "Latitude": "",
+        "Longitude": "",
+        "VisitNumber": "",
+        "Load": "",
+        "Feature": "",
+        "Type": ""
+      }
+    }
+  ]
+}
+```
