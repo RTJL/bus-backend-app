@@ -37,7 +37,5 @@ jobs:
         cat > env.yml << EOF
         ${{ secrets.ENV }}
         EOF
-    - name: Deploy create domain
-      run: sls create_domain --stage ${{ env.STAGE }}
     - name: Deploy Lambda functions
       run: sls deploy --stage ${{ env.STAGE }}
