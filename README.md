@@ -4,6 +4,7 @@ Backend serverless application that fetches the respective bus arrival informati
 ## Getting started
 - Setup local dev env
 - Run local dev server
+- Deployment
 
 ### Setup local dev env
 
@@ -32,6 +33,16 @@ Backend serverless application that fetches the respective bus arrival informati
 Start local dev server using serverless
     
 `sls offline start --stage local --runSchedulesOnInit`
+
+### Deployment
+
+  Create and push tags (vX.X.X)
+
+  Example
+
+  `git tag v0.1.0`
+
+  `git push origin --tags`
 
 ## Endpoints
 - /api/buses
