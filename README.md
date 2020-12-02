@@ -1,5 +1,5 @@
-# Serverless Framework + AWS Backend
-Basic steps needed to get API gateway with a custom domain name and serverless functions working using the serverless framework.
+# Bus Arrival Backend App
+Backend serverless application that fetches the respective bus arrival information. Built using Serverless Framework and deployed on AWS Lambda + API Gateway.
 
 ## Getting started
 - Setup local dev env
@@ -11,66 +11,22 @@ Basic steps needed to get API gateway with a custom domain name and serverless f
 
     `python3 -m venv .venv`
 
-    `source .venv/bin/activate`
+2. Create your own `.envrc` config file
 
-2. Install python requirements
+    `cp .envrc.template .envrc`
 
-    `pip install -r requirements.txt`
+3. Replace the API key(REPLACE_WITH_YOUR_KEY) with your own
 
-3. Install serverless plugins
+    `export LTA_ACCOUNT_KEY=REPLACE_WITH_YOUR_KEY`
 
-    `npm install`
+4. Grant direnv permissions and re-enter the directory 
+
+    `direnv allow`
+    `cd ..`
+    `cd bus-backend-app`
 
 ### Run local dev server
 
-1. Start local dev server using serverless
+Start local dev server using serverless
     
     `sls offline start --stage local --runSchedulesOnInit`
-
-
-## Outline of Steps
-1. Link domain to AWS Route 53
-2. Create domain using Serverless framework
-3. Create AWS resources using Serverless framework
-
----
-
-### Link domain to AWS Route 53
-
-1. Register a domain
-
-    [freenom](https://freenom.com/) provides free `.tk` domains.
-
-1. Get a AWS certificate for your domain registar
-    1. Go to Certificate Manager
-    2. Request a public certificate
-    3. Enter your domain name
-    4. Choose email or DNS confirmation
-    - If email, click approve upon receiving email
-    - If DNS, go to domain registar and update the CNAME
-
-2. Transfer DNS control from domain registar to AWS
-    1. Go to Route53
-    2. Create a new hosted zone
-    3. Enter domain name
-    4. Go back to domain registar and update nameserver(NS) values
-
-### Create domain using Serverless framework
-
-1. Install **serverless-domain-manager** plugin
-
-    `npm install serverless-domain-manager`
-
-2. Add the plugin configuration to `serverless.yml` config file
-
-3. Create domain using the serverless command 
-
-    `sls create_domain --stage dev`
-
-### Create AWS resources using Serverless framework
-
-1. Add the provider and functions to `serverless.yml` config file
-
-2. Create AWS resources using the serverless command
-
-    `sls deploy --stage dev`

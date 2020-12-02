@@ -21,7 +21,8 @@
     "serverless-domain-manager": "^5.1.0",
     "serverless-offline": "^6.8.0",
     "serverless-offline-scheduler": "^0.4.2",
-    "serverless-python-requirements": "^5.1.0"
+    "serverless-python-requirements": "^5.1.0",
+    "serverless-ssm-publish": "^1.4.1"
   },
   "dependencies": {}
 }
