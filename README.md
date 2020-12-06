@@ -1,6 +1,8 @@
 # Bus Arrival Backend App
 Backend serverless application that fetches the respective bus arrival information. Built using Serverless Framework and deployed on AWS Lambda + API Gateway.
 
+[![YourActionName Actions Status](https://github.com/RTJL/bus-backend-app/workflows/Integrate/badge.svg)](https://github.com/RTJL/bus-backend-app/actions)
+
 ## Getting started
 - Setup local dev env
 - Run local dev server
