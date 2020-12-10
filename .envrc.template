@@ -1,6 +1,2 @@
-echo "Activating python virtualenv"
-source .venv/bin/activate
-pip install -r requirements.txt
 export LTA_ACCOUNT_KEY=REPLACE_WITH_YOUR_KEY
-npm install
-unset PS1
+export CACHE_ENDPOINT=127.0.0.1:6379

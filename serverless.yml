@@ -7,6 +7,11 @@ provider:
   runtime: python3.8
   stage: ${opt:stage}
   region: ap-southeast-1
+  environment:
+    STAGE: ${opt:stage}
+  vpc:
+    subnetIds: ${self:custom.subnetPrivateId.${opt:stage}}
+    securityGroupIds: ${self:custom.securityGroupId.${opt:stage}}
   apiGateway:
     shouldStartNameWithService: true
   iamRoleStatements:
@@ -31,7 +36,8 @@ functions:
           method: get
   get_busstops:
     handler: busstops.get
-    memorySize: 128
+    memorySize: 512
+    timeout: 30
     events:
       - http:
           path: api/bus-stops
@@ -47,6 +53,15 @@ functions:
             parameters:
               paths:
                 id: true
+  update_busstops_cache:
+     handler: update_cache.busstops
+     memorySize: 128
+     events:
+       - schedule:
+           name: fetch-latest-busstops-${self:provider.stage}
+           description: fetch and update bus stops cache
+           rate: rate(1 minute)
+           enabled: true
 
 plugins:
   - serverless-offline-scheduler
@@ -66,3 +81,12 @@ custom:
     dev: /bus-backend-app/dev/apiGateway/endpoint
     staging: /bus-backend-app/staging/apiGateway/endpoint
     prod: /bus-backend-app/prod/apiGateway/endpoint
+  subnetPrivateId:
+    dev: ${ssm:/bus-backend-infra/dev/subnet/private/ids~split}
+    staging: ${ssm:/bus-backend-infra/staging/subnet/private/ids~split}
+    prod: ${ssm:/bus-backend-infra/prod/subnet/private/ids~split}
+  securityGroupId:
+    dev: ${ssm:/bus-backend-infra/dev/securityGroup/ids~split}
+    staging: ${ssm:/bus-backend-infra/staging/securityGroup/ids~split}
+    prod: ${ssm:/bus-backend-infra/prod/securityGroup/ids~split}
+  

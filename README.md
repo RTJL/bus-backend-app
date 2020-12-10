@@ -29,9 +29,21 @@ Backend serverless application that fetches the respective bus arrival informati
 
 ### Run local dev server
 
-Start local dev server using serverless
-    
-`sls offline start --stage local --runSchedulesOnInit`
+  Start local dev server using helper bash script
+      
+  `./start_local.sh`
+
+  This script will:
+  
+  1. activate python virtual environment & install pip dependencies
+
+  2. install the serverless framework dependencies
+
+  3. start a local redis docker container to mock Elasticache
+
+  4. start the serverless offline server
+
+      `sls offline start --stage local --runSchedulesOnInit`
 
 ## Endpoints
 - /api/buses

@@ -1,13 +1,14 @@
+# Standard library imports
 import json
 import os
-from retrieve_keys import get_lta_key
-from landtransportsg import PublicTransport
 
-lta_key = get_lta_key()
-client = PublicTransport(lta_key)
+# Third party imports
+
+# Local app imports
+from services import busstops
 
 def get(event, context):
-    busstop_list = client.bus_stops()
+    busstop_list = busstops.getAll()
 
     body = {
         "busStops": busstop_list
@@ -19,12 +20,3 @@ def get(event, context):
     }
 
     return response
-
-    # Use this code if you don't use the http event with the LAMBDA-PROXY
-    # integration
-    """
-    return {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "event": event
-    }
-    """
