@@ -7,6 +7,7 @@ provider:
   runtime: python3.8
   stage: ${opt:stage}
   region: ap-southeast-1
+  memorySize: 128
   environment:
     STAGE: ${opt:stage}
   vpc:
@@ -29,14 +30,12 @@ provider:
 functions:
   get_buses:
     handler: buses.get
-    memorySize: 128
     events:
       - http:
           path: api/buses
           method: get
   get_busstops:
     handler: busstops.get
-    memorySize: 512
     timeout: 30
     events:
       - http:
@@ -44,7 +43,6 @@ functions:
           method: get
   get_arrival:
     handler: arrival.get
-    memorySize: 128
     events:
       - http:
           path: api/arrival/{id}
@@ -55,11 +53,20 @@ functions:
                 id: true
   update_busstops_cache:
      handler: update_cache.busstops
-     memorySize: 128
+     timeout: 30
      events:
        - schedule:
            name: fetch-latest-busstops-${self:provider.stage}
            description: fetch and update bus stops cache
+           rate: rate(1 minute)
+           enabled: true
+  update_buses_cache:
+     handler: update_cache.buses
+     timeout: 30
+     events:
+       - schedule:
+           name: fetch-latest-buses-${self:provider.stage}
+           description: fetch and update buses cache
            rate: rate(1 minute)
            enabled: true
 

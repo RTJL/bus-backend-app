@@ -23,3 +23,11 @@ def setValue(key, value):
 
 def setDict(dict):
   r.mset(dict)
+
+def deleteKey(key):
+  r.delete(key)
+
+def deletePrefixKey(prefix_key):
+  search_key = prefix_key + "*"
+  for key in r.keys(search_key):
+    deleteKey(key)

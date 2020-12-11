@@ -1,12 +1,21 @@
+# Standard library imports
+import json
+
 # Third party imports
-from landtransportsg import PublicTransport
 
 # Local app imports
-from retrieve_keys import get_lta_key
-
-lta_key = get_lta_key()
-client = PublicTransport(lta_key)
+from services import cache_wrapper
+from services import constants
 
 def getAll():
-  busstop_list = client.bus_stops()
-  return busstop_list
+  busstop_list_str = cache_wrapper.getValue(constants.BUSSTOP_HASH_ALL)
+  busstop_list_hash = cache_wrapper.getValue(constants.BUSSTOP_HASH_KEY)
+
+  busstop_list = json.loads(busstop_list_str)
+
+  body = {
+    "busStops": busstop_list,
+    "lastUpdate": busstop_list_hash
+  }
+
+  return body

@@ -8,11 +8,7 @@ import os
 from services import busstops
 
 def get(event, context):
-    busstop_list = busstops.getAll()
-
-    body = {
-        "busStops": busstop_list
-    }
+    body = busstops.getAll()
 
     response = {
         "statusCode": 200,
