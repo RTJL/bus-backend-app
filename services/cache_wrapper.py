@@ -7,7 +7,7 @@ import redis
 from retrieve_keys import get_cache_endpoint
 
 endpoint = get_cache_endpoint()
-r = redis.Redis(host=endpoint)
+r = redis.Redis(host=endpoint, ssl_cert_reqs=None)
 
 def getValue(key):
   if isPresent(key):
